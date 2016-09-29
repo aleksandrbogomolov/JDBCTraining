@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
@@ -14,10 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Transactional(readOnly = true)
@@ -43,23 +42,25 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     @Override
     public User saveOrUpdate(User user) {
-        Map<String, Object> namedParam = new HashMap<>();
-        namedParam.put("id", user.getId());
-        namedParam.put("name", user.getName());
-        namedParam.put("email", user.getEmail());
+        MapSqlParameterSource namedParam = new MapSqlParameterSource();
+        namedParam.addValue("id", user.getId());
+        namedParam.addValue("name", user.getName());
+        namedParam.addValue("email", user.getEmail());
         if (user.isNew()) {
             Number key = jdbcInsert.executeAndReturnKey(namedParam);
             user.setId(key.intValue());
             setRole(user);
+        } else {
+            deleteRole(user);
+            setRole(user);
+            namedTemplate.update("UPDATE users SET name=:name, email=:email WHERE id=:id", namedParam);
         }
         return user;
     }
 
     @Override
     public User getOne(int id) {
-        Map<String, Object> namedParam = new HashMap<>();
-        namedParam.put("id", id);
-        List<User> users = namedTemplate.query("SELECT * FROM users WHERE id=:id", namedParam, userRowMapper);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users WHERE id=? LIMIT 1", userRowMapper, id);
         return users.get(0);
     }
 
@@ -89,5 +90,9 @@ public class UserDaoImpl implements UserDao {
                         return user.getRoles().size();
                     }
                 });
+    }
+
+    private void deleteRole(User user) {
+        jdbcTemplate.update("DELETE * FROM user_role WHERE user_id=?", user.getId());
     }
 }
