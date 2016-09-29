@@ -1,0 +1,7 @@
+package com.aleksandrbogomolov.jdbc_training.entity;
+
+public enum Role {
+
+    ROLE_USER,
+    ROLE_ADMIN;
+}

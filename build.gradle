@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id 'war'
+    id 'com.craigburke.bower-installer' version '2.5.1'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+}
+
+group 'com.aleksandrbogomolov'
+version '0.1-SNAPSHOT'
+
+dependencies {
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.2.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.2.RELEASE'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.39'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.2'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.10'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+bower {
+    installBase = 'src/main/webapp/bower'
+
+    'angular'('1.5.8') {
+        source '**' >> '/js/angular/'
+    }
+
+    'angular-route'('1.5.8') {
+        source '**' >> '/js/angular-route/'
+    }
+
+    'bootstrap'('3.3.7') {
+        source 'dist/css/*.min.css' >> '/css/bootstrap/'
+        excludes 'jquery'
+    }
+}
