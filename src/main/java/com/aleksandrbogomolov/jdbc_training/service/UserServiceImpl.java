@@ -19,12 +19,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        return userDao.save(user);
+        return userDao.saveOrUpdate(user);
     }
 
     @Override
     public void update(User user) {
-        userDao.save(user);
+        userDao.saveOrUpdate(user);
     }
 
     @Override

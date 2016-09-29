@@ -38,7 +38,12 @@ public class DataBaseConfiguration {
     }
 
     @Bean
-    public NamedParameterJdbcTemplate jdbcTemplate() {
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public NamedParameterJdbcTemplate namedTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
     }
 

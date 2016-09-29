@@ -16,7 +16,7 @@ App.controller('jdbc-controller', ['$scope', '$http', function ($scope, $http) {
         var data = {
             name: $scope.name,
             email: $scope.email,
-            role: 'ROLE_USER'
+            roles: ['ROLE_USER', 'ROLE_ADMIN']
         };
 
         $http.post('/user', data)
