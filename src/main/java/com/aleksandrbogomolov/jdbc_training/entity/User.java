@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -15,9 +17,15 @@ public class User extends NamedEntity {
 
     private String email;
 
-    private Role role;
+    private LocalDate createdDate;
 
-    private LocalDateTime createdDate;
+    private Set<Role> roles;
+
+    public User(int id, String name, String email, LocalDate createdDate) {
+        super(id, name);
+        this.email = email;
+        this.createdDate = createdDate;
+    }
 
     @Override
     public String toString() {
@@ -25,7 +33,6 @@ public class User extends NamedEntity {
                 "id=" + this.getId() +
                 ", name=" + this.getName() +
                 ", email='" + email +
-                ", role=" + role +
                 ", createdDate=" + createdDate +
                 '}';
     }

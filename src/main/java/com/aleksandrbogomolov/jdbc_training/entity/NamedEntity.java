@@ -12,4 +12,9 @@ import lombok.Setter;
 public class NamedEntity extends BaseEntity {
 
     protected String name;
+
+    protected NamedEntity(Integer id, String name) {
+        super(id);
+        this.name = name;
+    }
 }
